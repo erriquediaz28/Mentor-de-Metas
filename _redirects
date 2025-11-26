@@ -1,1 +1,2 @@
-/api/* https://www.google.com/search?q=https://generativelanguage.googleapis.com/v1beta/models/:splat 200
+/api/*
+https://www.google.com/search?q=https://generativelanguage.googleapis.com/v1beta/models/:splat%3Fkey%3D:GEMINI_API_KEY 200
