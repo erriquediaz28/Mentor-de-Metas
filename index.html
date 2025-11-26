@@ -49,17 +49,8 @@
 
     <div class="w-full max-w-lg bg-white rounded-xl shadow-2xl flex flex-col h-[80vh] min-h-[500px]">
         
-        <!-- Encabezado con el botón de descarga -->
+        <!-- Encabezado sin el botón de descarga -->
         <header class="p-5 border-b border-gray-100 bg-indigo-600 text-white rounded-t-xl relative">
-            
-            <!-- Botón de Descarga -->
-            <button onclick="downloadFile()" title="Descargar esta aplicación como archivo HTML"
-                    class="absolute right-4 top-1/2 transform -translate-y-1/2 p-2 rounded-full hover:bg-indigo-700 transition duration-150">
-                <!-- Icono de descarga (flecha hacia abajo) -->
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3" />
-                </svg>
-            </button>
             
             <h1 class="text-xl font-bold text-center">
                 Mentor de Metas | Coach IA
@@ -107,8 +98,8 @@
         // Variables de la API y Referencias DOM
         const MODEL_NAME = 'gemini-2.5-flash-preview-09-2025';
         
-        // *** CAMBIO IMPORTANTE PARA NETLIFY ***
-        // Ahora usamos el proxy de Netlify /api/ para mantener la clave de API segura
+        // La URL de la API usa el proxy de Netlify (/api/) para seguridad.
+        // REQUIERE el archivo _redirects y la variable GEMINI_API_KEY en Netlify.
         const API_PROXY_URL = `/api/${MODEL_NAME}:generateContent`;
 
         // Referencias DOM
@@ -133,25 +124,7 @@
             }
         });
 
-        /**
-         * Descarga el archivo HTML actual para que pueda ser compartido.
-         */
-        function downloadFile() {
-            // Se usa el contenido original del DOM para la descarga.
-            const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
-            
-            const blob = new Blob([htmlContent], { type: 'text/html' });
-            const url = URL.createObjectURL(blob);
-            
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'coach-motivacional-ia.html';
-            document.body.appendChild(a);
-            a.click();
-            
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
-        }
+        // La función downloadFile() ha sido eliminada.
 
         /**
          * Muestra el mensaje de error y limpia los indicadores.
@@ -229,7 +202,7 @@
             const MAX_RETRIES = 5;
             for (let i = 0; i < MAX_RETRIES; i++) {
                 try {
-                    // *** CAMBIO CLAVE: Usamos la URL del proxy de Netlify ***
+                    // Usamos la URL del proxy de Netlify
                     const response = await fetch(API_PROXY_URL, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
@@ -237,10 +210,9 @@
                     });
 
                     if (!response.ok) {
-                        // Si la respuesta es un error HTTP, verifica si es 401 (API Key missing)
                         const errorStatus = response.status;
                         if (errorStatus === 401 || errorStatus === 400) {
-                             throw new Error("¡Fallo de Autenticación! Asegúrate de haber configurado tu API Key en Netlify (variables de entorno).");
+                             throw new Error("¡Fallo de Autenticación! Asegúrate de haber configurado tu API Key en Netlify (Variables ambientales).");
                         }
                         throw new Error(`Error HTTP: ${errorStatus}`);
                     }
@@ -279,5 +251,3 @@
     </script>
 </body>
 </html>
-
-
